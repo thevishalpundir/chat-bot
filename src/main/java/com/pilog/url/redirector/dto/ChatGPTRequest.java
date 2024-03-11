@@ -1,5 +1,6 @@
 package com.pilog.url.redirector.dto;
 
+
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -17,7 +18,6 @@ public class ChatGPTRequest {
     public ChatGPTRequest(String model, String prompt) {
         this.model = model;
         this.messages = new ArrayList<>();
-        this.messages.add(new Message("user",prompt));
+        this.messages.add(new Message("user", prompt));
     }
-
 }

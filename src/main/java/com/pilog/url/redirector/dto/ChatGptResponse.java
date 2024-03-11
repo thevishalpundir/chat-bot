@@ -1,5 +1,6 @@
 package com.pilog.url.redirector.dto;
 
+
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,7 +20,5 @@ public class ChatGptResponse {
 
         private int index;
         private Message message;
-
     }
-
 }

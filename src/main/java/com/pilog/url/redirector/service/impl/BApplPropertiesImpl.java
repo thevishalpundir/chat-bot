@@ -11,16 +11,18 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class BApplPropertiesImpl implements IBApplPropertiesService {
-    @Autowired
-    private BApplPropertiesRepository bApplPropertiesRepository;
-
+    @Autowired private BApplPropertiesRepository bApplPropertiesRepository;
 
     @Value("${spring.ai.openai.chat}")
-    private  String gptprocessValue;
-    @Override
-        public  String getChatGPTKey() {
+    private String gptprocessValue;
 
-        Optional<BApplProperties> applProperties = bApplPropertiesRepository.findByKeyName(gptprocessValue);
-        return applProperties.map(BApplProperties::getProcessValue).orElseThrow(() -> new RuntimeException("Value not found in database"));
+    @Override
+    public String getChatGPTKey() {
+
+        Optional<BApplProperties> applProperties =
+                bApplPropertiesRepository.findByKeyName(gptprocessValue);
+        return applProperties
+                .map(BApplProperties::getProcessValue)
+                .orElseThrow(() -> new RuntimeException("Value not found in database"));
     }
 }

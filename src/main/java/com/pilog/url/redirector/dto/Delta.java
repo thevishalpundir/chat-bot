@@ -1,5 +1,6 @@
 package com.pilog.url.redirector.dto;
 
+
 import lombok.Data;
 
 @Data

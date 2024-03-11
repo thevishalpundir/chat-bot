@@ -1,5 +1,6 @@
 package com.pilog.url.redirector.dto;
 
+
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -16,11 +17,10 @@ public class ChatGPTRequestStream {
 
     private boolean stream;
 
-    public ChatGPTRequestStream(String model, String prompt,boolean stream) {
+    public ChatGPTRequestStream(String model, String prompt, boolean stream) {
         this.model = model;
         this.messages = new ArrayList<>();
-        this.messages.add(new Message("user",prompt));
-        this.stream=stream;
+        this.messages.add(new Message("user", prompt));
+        this.stream = stream;
     }
-
 }

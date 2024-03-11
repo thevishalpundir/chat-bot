@@ -16,66 +16,70 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 
-
 @Service
 public class AIServiceImpl implements IAIService {
-@Autowired
-  private IBApplPropertiesService ibApplPropertiesService;
+    @Autowired private IBApplPropertiesService ibApplPropertiesService;
+
     @Value("${openai.model}")
     private String model;
 
     @Value(("${openai.api.url}"))
     private String apiURL;
 
-    @Autowired
-    private RestTemplate template;
-    @Autowired
-    private WebClient webClient;
+    @Autowired private RestTemplate template;
+    @Autowired private WebClient webClient;
 
     public String showAITypedValueResults(String prompt) {
-        ChatGPTRequest request=new ChatGPTRequest(model, prompt);
-         ChatGptResponse chatGptResponse = template.postForObject(apiURL, request, ChatGptResponse.class);
+        ChatGPTRequest request = new ChatGPTRequest(model, prompt);
+        ChatGptResponse chatGptResponse =
+                template.postForObject(apiURL, request, ChatGptResponse.class);
         return chatGptResponse.getChoices().get(0).getMessage().getContent();
     }
 
     public Flux<String> showAITypedValueResultsStream(@RequestParam("prompt") String prompt) {
         ChatGPTRequestStream request = new ChatGPTRequestStream(model, prompt, true);
-        Flux<ChatCompletionChunk> chatCompletionChunkFlux = webClient.post()
-                .accept(MediaType.TEXT_EVENT_STREAM)
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(request)
-                .retrieve()
-                .bodyToFlux(ChatCompletionChunk.class);
+        Flux<ChatCompletionChunk> chatCompletionChunkFlux =
+                webClient
+                        .post()
+                        .accept(MediaType.TEXT_EVENT_STREAM)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .bodyValue(request)
+                        .retrieve()
+                        .bodyToFlux(ChatCompletionChunk.class);
 
         System.out.println(chatCompletionChunkFlux);
 
-
-        return webClient.post()
+        return webClient
+                .post()
                 .accept(MediaType.TEXT_EVENT_STREAM)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(request)
                 .retrieve()
-                .bodyToFlux(ChatCompletionChunk.class) // Assuming ChatCompletionChunk has the content field
-                .filter(chunk -> chunk.getChoices() != null && !chunk.getChoices().isEmpty() &&
-                        chunk.getChoices().get(0).getDelta() != null &&
-                        chunk.getChoices().get(0).getDelta().getContent() != null)
+                .bodyToFlux(
+                        ChatCompletionChunk
+                                .class) // Assuming ChatCompletionChunk has the content field
+                .filter(
+                        chunk ->
+                                chunk.getChoices() != null
+                                        && !chunk.getChoices().isEmpty()
+                                        && chunk.getChoices().get(0).getDelta() != null
+                                        && chunk.getChoices().get(0).getDelta().getContent()
+                                                != null)
                 .map(chunk -> chunk.getChoices().get(0).getDelta().getContent());
     }
 
-    public Flux<ChatCompletionChunk> showAITypedValueResultsStreams(@RequestParam("prompt") String prompt) {
+    public Flux<ChatCompletionChunk> showAITypedValueResultsStreams(
+            @RequestParam("prompt") String prompt) {
         ChatGPTRequestStream request = new ChatGPTRequestStream(model, prompt, true);
-        Flux<ChatCompletionChunk> chatCompletionChunkFlux = webClient.post()
-                .accept(MediaType.TEXT_EVENT_STREAM)
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(request)
-                .retrieve()
-                .bodyToFlux(ChatCompletionChunk.class);
+        Flux<ChatCompletionChunk> chatCompletionChunkFlux =
+                webClient
+                        .post()
+                        .accept(MediaType.TEXT_EVENT_STREAM)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .bodyValue(request)
+                        .retrieve()
+                        .bodyToFlux(ChatCompletionChunk.class);
 
-       return chatCompletionChunkFlux;
-
+        return chatCompletionChunkFlux;
     }
-
 }
-
-
-
