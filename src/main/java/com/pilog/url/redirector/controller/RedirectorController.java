@@ -2,6 +2,7 @@ package com.pilog.url.redirector.controller;
 
 
 import com.pilog.url.redirector.dto.ChatCompletionChunk;
+import com.pilog.url.redirector.enums.APIType;
 import com.pilog.url.redirector.service.IAIService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,12 +18,12 @@ public class RedirectorController {
 
     @Autowired private IAIService iaiService;
 
-    @GetMapping("/showAITypedValueResults")
-    public ResponseEntity<String> chat(@RequestParam("prompt") String prompt) {
-
-        String response = iaiService.showAITypedValueResults(prompt);
-
-        return new ResponseEntity(response, HttpStatus.OK);
+    @GetMapping("/getSuitableRes")
+    public ResponseEntity<?> showAITypedValueResults(
+            @RequestParam("prompt") String prompt,
+            @RequestParam(value = "apiType", defaultValue = "gpt") APIType apiType) {
+        String response = getResponse(apiType, prompt);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping(
@@ -41,5 +42,18 @@ public class RedirectorController {
             @RequestParam("prompt") String prompt) {
         Flux<ChatCompletionChunk> stringFlux = iaiService.showAITypedValueResultsStreams(prompt);
         return new ResponseEntity(stringFlux, HttpStatus.OK);
+    }
+
+    private String getResponse(APIType apiType, String prompt) {
+        switch (apiType) {
+            case gpt:
+                return iaiService.showAITypedValueResults(prompt);
+            case type_1:
+                return "TYPE_1";
+            case type_2:
+                return "TYPE_2";
+            default:
+                return "Unsupported API type";
+        }
     }
 }
