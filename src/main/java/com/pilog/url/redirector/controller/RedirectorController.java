@@ -20,7 +20,7 @@ public class RedirectorController {
 
     @Autowired private IAIService iaiService;
 
-    @GetMapping(path="/api/v1/getSuitableRes")
+    @GetMapping(path = "/api/v1/getSuitableRes")
     public ResponseEntity<?> getSuitableRes(
             @RequestParam("prompt") String prompt,
             @RequestParam(value = "apiType", defaultValue = "gpt") APIType apiType) {
