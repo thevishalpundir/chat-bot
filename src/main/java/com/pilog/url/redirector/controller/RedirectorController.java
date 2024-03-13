@@ -3,6 +3,7 @@ package com.pilog.url.redirector.controller;
 
 import com.pilog.url.redirector.dto.ChatCompletionChunk;
 import com.pilog.url.redirector.enums.APIType;
+import com.pilog.url.redirector.exception.BadRequestException;
 import com.pilog.url.redirector.service.IAIService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,13 @@ public class RedirectorController {
     @GetMapping(path = "/api/v1/getSuitableRes")
     public ResponseEntity<?> getSuitableRes(
             @RequestParam(value = "prompt", required = false) String prompt,
-            @RequestParam(value = "apiType", defaultValue = "gpt") String apiType) {
+            @RequestParam(value = "apiType", required = false) String apiType) {
+        if (prompt != null && apiType != null) {
+            throw new BadRequestException(
+                    HttpStatus.BAD_REQUEST,
+                    "Please provide only one parameter: prompt or apiType.",
+                    "select.one.parameter");
+        }
         return prompt == null
                 ? ResponseEntity.ok(iaiService.getApiDetails(apiType))
                 : ResponseEntity.ok(iaiService.showAITypedValueResults(prompt));
