@@ -2,7 +2,6 @@ package com.pilog.url.redirector.controller;
 
 
 import com.pilog.url.redirector.dto.ChatCompletionChunk;
-import com.pilog.url.redirector.enums.APIType;
 import com.pilog.url.redirector.exception.BadRequestException;
 import com.pilog.url.redirector.service.IAIService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,5 +58,4 @@ public class RedirectorController {
         Flux<ChatCompletionChunk> stringFlux = iaiService.showAITypedValueResultsStreams(prompt);
         return new ResponseEntity(stringFlux, HttpStatus.OK);
     }
-
 }
