@@ -22,10 +22,11 @@ public class RedirectorController {
 
     @GetMapping(path = "/api/v1/getSuitableRes")
     public ResponseEntity<?> getSuitableRes(
-            @RequestParam("prompt") String prompt,
-            @RequestParam(value = "apiType", defaultValue = "gpt") APIType apiType) {
-        String response = getResponse(apiType, prompt);
-        return ResponseEntity.ok(response);
+            @RequestParam(value = "prompt", required = false) String prompt,
+            @RequestParam(value = "apiType", defaultValue = "gpt") String apiType) {
+        return prompt == null
+                ? ResponseEntity.ok(iaiService.getApiDetails(apiType))
+                : ResponseEntity.ok(iaiService.showAITypedValueResults(prompt));
     }
 
     @GetMapping(
