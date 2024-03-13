@@ -25,6 +25,12 @@ public class RedirectorController {
     public ResponseEntity<?> getSuitableRes(
             @RequestParam(value = "prompt", required = false) String prompt,
             @RequestParam(value = "apiType", required = false) String apiType) {
+        if ((prompt == null || prompt.isEmpty()) && (apiType == null || apiType.isEmpty())) {
+            throw new BadRequestException(
+                    HttpStatus.BAD_REQUEST,
+                    "Please provide either prompt or apiType parameter.",
+                    "both.parameters.empty");
+        }
         if (prompt != null && apiType != null) {
             throw new BadRequestException(
                     HttpStatus.BAD_REQUEST,
