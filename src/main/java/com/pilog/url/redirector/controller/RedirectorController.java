@@ -60,16 +60,4 @@ public class RedirectorController {
         return new ResponseEntity(stringFlux, HttpStatus.OK);
     }
 
-    private String getResponse(APIType apiType, String prompt) {
-        switch (apiType) {
-            case gpt:
-                return iaiService.showAITypedValueResults(prompt);
-            case type_1:
-                return "TYPE_1";
-            case type_2:
-                return "TYPE_2";
-            default:
-                return "Unsupported API type";
-        }
-    }
 }
